@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum role {
+  client
+  freelancer
+}
+
+enum pricing_type {
+  fixed
+  hourly
+}
+
+enum status {
+  open
+  in_progress
+  completed
+  cancelled
+}
+
+enum proposal_status {
+  pending
+  accepted
+  rejected
+}
+
+enum contract_status {
+  active
+  completed
+  cancelled
+}
+
+enum milestone_status {
+  pending
+  submitted
+  approved
+  rejected
+}
+
+model users {
+  id String @id @default(nanoid())
+  name String 
+  email String @unique
+  passowrd String
+  role role
+  bio String?
+  skills Json? @default("[]")
+  hourly_rate Int?
+  profile_image String?
+  created_at DateTime @default(now())
+
+  freelance_services services[]
+  client_projects projects[]
+  freelance_proposals proposals[]
+
+  freelance_contract contracts[] @relation(name: "freelancer")
+  client_contract  contracts[] @relation(name: "clients")
+  reviewer reviews[] @relation(name: "reviewer")
+  reviewee reviews[] @relation(name: "reviewee")
+}
+
+model services {
+  id String @id @default(nanoid())
+  freelancer_id String
+  title String
+  description String
+  category String
+  pricing_type pricing_type
+  price Decimal @db.Decimal(10,2)
+  delivery_days Int
+  rating Decimal @db.Decimal(2,1) @default("0.0")
+  total_reviews Int @default(0)
+  created_at DateTime @default(now())
+  freelancer users @relation(fields: [freelancer_id], references: [id])
+}
+
+model projects {
+  id String @id @default(nanoid())
+  client_id String
+  title String
+  description String
+  category String
+  budget_min Decimal @db.Decimal(10,2)
+  budget_max Decimal @db.Decimal(10,2)
+  deadline DateTime
+  status status @default(open)
+  required_skills Json @default("[]")
+  created_at DateTime @default(now())
+
+  clients users @relation(fields: [client_id], references: [id])
+  proposals proposals[]
+  contracts contracts[]
+  @@index([client_id])
+}
+
+model proposals {
+  id String @id @default(nanoid())
+  project_id String
+  freelancer_id String
+  cover_letter String
+  proposed_price Decimal @db.Decimal(10,2)
+  estimated_duration Int
+  status proposal_status @default(pending)
+  submitted_at DateTime @default(now())
+
+  project projects @relation(fields: [project_id], references: [id], onDelete: Cascade )
+  freelancer users @relation(fields: [freelancer_id], references: [id])
+  @@unique([project_id, freelancer_id], name: "freelancer_project") 
+  @@index([project_id])
+  @@index([freelancer_id])
+}
+
+model contracts {
+  id String @id @default(nanoid())
+  project_id String
+  freelancer_id String
+  client_id String
+  total_amount Decimal @db.Decimal(10,2)
+  status contract_status @default(active)
+  started_at DateTime @default(now())
+  completed_at DateTime?
+
+  project projects @relation(fields: [project_id], references: [id])
+  freelancer users @relation(name: "freelancer", fields: [freelancer_id], references: [id])
+  client users @relation(name: "clients" , fields: [client_id], references: [id])
+  milestones milestones[]
+  reviews reviews[]
+}
+
+model milestones {
+  id String @id @default(nanoid())
+  contract_id String
+  title String
+  description String?
+  amount Decimal @db.Decimal(10,2)
+  due_date DateTime
+  order_index Int
+  status milestone_status @default(pending)
+  submitted_at DateTime?
+  approved_at DateTime?
+
+  contract contracts @relation(fields: [contract_id], references: [id], onDelete: Cascade)
+  @@unique([contract_id, order_index])
+}
+
+model reviews {
+  id String @id @default(nanoid())
+  contract_id String
+  reviewer_id String
+  reviewee_id String
+  rating Int
+  comment String?
+  created_at DateTime @default(now())
+
+  contract contracts @relation(fields: [contract_id], references: [id])
+  reviewer users @relation(name: "reviewer", fields: [reviewer_id], references: [id])
+  reviewee users @relation(name: "reviewee", fields: [reviewee_id], references: [id])
+  @@unique([contract_id, reviewer_id])
+}
