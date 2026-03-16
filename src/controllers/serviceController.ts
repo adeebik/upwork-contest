@@ -19,7 +19,7 @@ export const createService = async (req: Request, res: Response) => {
   try {
     const data = await prisma.services.create({
       data: {
-        freelancer_id: freelancerId!?.toString(),
+        freelancer_id: freelancerId!,
         title,
         description,
         category,
@@ -38,7 +38,7 @@ export const createService = async (req: Request, res: Response) => {
         description: data.description,
         category: data.category,
         pricingType: data.pricing_type,
-        price: data.price,
+        price: data.price.toNumber(),
         deliveryDays: data.delivery_days,
         rating: data.rating,
         totalReviews: data.total_reviews,

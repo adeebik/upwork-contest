@@ -35,3 +35,18 @@ export const projectSchema = z.object({
   deadline: z.coerce.date(),
   requiredSkills: z.array(z.string()).optional().default([]),
 });
+
+export const proposalSchema = z.object({
+  coverLetter : z.string().min(1),
+  proposedPrice : z.int().min(1),
+  estimatedDuration : z.int().min(1)
+})
+
+export const milestoneSchema = z.object({
+  milestones:z.array(z.object({
+    title: z.string().min(1),
+    description: z.string().default(""),
+    amount: z.int().min(1),
+    dueDate : z.coerce.date()
+  }))
+})

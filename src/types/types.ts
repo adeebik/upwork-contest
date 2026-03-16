@@ -8,7 +8,7 @@ export enum pricing_type {
   HOURLY = "hourly",
 }
 
-export enum status {
+export enum projectStatus {
   OPEN = "open",
   IN_PROGRESS = "in_progress",
   COMPLETED = "completed",
