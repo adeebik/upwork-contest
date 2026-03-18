@@ -7,6 +7,6 @@ const serviceRouter: Router = Router();
 
 serviceRouter.use(auth);
 
-serviceRouter.post("/", roleAuth(role.FREELACNER), createService);
+serviceRouter.post("/", roleAuth(role.FREELANCER), createService);
 
 export default serviceRouter;
