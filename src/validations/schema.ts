@@ -16,7 +16,6 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-
 export const servicesSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -37,16 +36,24 @@ export const projectSchema = z.object({
 });
 
 export const proposalSchema = z.object({
-  coverLetter : z.string().min(1),
-  proposedPrice : z.int().min(1),
-  estimatedDuration : z.int().min(1)
-})
+  coverLetter: z.string().min(1),
+  proposedPrice: z.int().min(1),
+  estimatedDuration: z.int().min(1),
+});
 
 export const milestoneSchema = z.object({
-  milestones:z.array(z.object({
-    title: z.string().min(1),
-    description: z.string().default(""),
-    amount: z.int().min(1),
-    dueDate : z.coerce.date()
-  }))
+  milestones: z.array(
+    z.object({
+      title: z.string().min(1),
+      description: z.string().default(""),
+      amount: z.int().min(1),
+      dueDate: z.coerce.date(),
+    }),
+  ),
+});
+
+export const reviewSchema = z.object({
+  contractId : z.string().min(1),
+  rating : z.int().min(1).max(5),
+  comment: z.string().min(1)
 })

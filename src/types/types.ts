@@ -1,6 +1,6 @@
 export enum role {
   CLIENT = "client",
-  FREELACNER = "freelancer",
+  FREELANCER = "freelancer",
 }
 
 export enum pricing_type {

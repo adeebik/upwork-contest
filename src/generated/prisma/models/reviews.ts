@@ -252,7 +252,7 @@ export type reviewsOrderByWithRelationInput = {
 
 export type reviewsWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  contract_id_reviewer_id?: Prisma.reviewsContract_idReviewer_idCompoundUniqueInput
+  contract_review?: Prisma.reviewsContract_reviewCompoundUniqueInput
   AND?: Prisma.reviewsWhereInput | Prisma.reviewsWhereInput[]
   OR?: Prisma.reviewsWhereInput[]
   NOT?: Prisma.reviewsWhereInput | Prisma.reviewsWhereInput[]
@@ -265,7 +265,7 @@ export type reviewsWhereUniqueInput = Prisma.AtLeast<{
   contract?: Prisma.XOR<Prisma.ContractsScalarRelationFilter, Prisma.contractsWhereInput>
   reviewer?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
   reviewee?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
-}, "id" | "contract_id_reviewer_id">
+}, "id" | "contract_review">
 
 export type reviewsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -372,7 +372,7 @@ export type reviewsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type reviewsContract_idReviewer_idCompoundUniqueInput = {
+export type reviewsContract_reviewCompoundUniqueInput = {
   contract_id: string
   reviewer_id: string
 }
